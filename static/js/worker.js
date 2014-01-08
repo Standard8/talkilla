@@ -266,6 +266,7 @@ var handlers = {
   },
 
   'social.initialize': function() {
+    dump("social.initialize Started\n");
     // Save the browserPort
     browserPort = this;
 
@@ -274,6 +275,7 @@ var handlers = {
     tkWorker.ports.remove(this);
 
     tkWorker.initialize();
+    dump("social.initialize complete\n");
   },
 
   // Talkilla events
@@ -309,6 +311,7 @@ var handlers = {
    * Called when the sidebar is ready.
    */
   'talkilla.sidebar-ready': function(event) {
+    dump("talkilla.sidebar-ready\n");
     this.postEvent('talkilla.worker-ready');
     if (spa && spa.connected) {
       tkWorker.user.send();
@@ -316,6 +319,7 @@ var handlers = {
                      {capabilities: spa.capabilities});
       this.postEvent('talkilla.users', tkWorker.users.toArray());
     }
+    dump("talkilla.sidebar-ready complete\n");
   },
 
   /**
@@ -381,6 +385,7 @@ var handlers = {
     var spec = new payloads.SPASpec(event.data);
 
     function startSPA() {
+      dump("Enalbing SPA\n");
       // XXX: For now, we only support one SPA.
       spa = new SPA({src: spec.src});
       _setupSPA(spa);
@@ -388,8 +393,10 @@ var handlers = {
     }
 
     tkWorker.spaDb.store(spec, function(err) {
-      if (err)
+      if (err) {
+        dump("Error adding spa " + err + "\n");
         return tkWorker.ports.broadcastError("Error adding SPA", err);
+      }
 
       // Try starting the SPA even if there's an error adding it - at least
       // the user can possibly get into it.
