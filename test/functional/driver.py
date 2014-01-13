@@ -37,6 +37,11 @@ class Driver(WebDriver):
         try:
             self.switchToSidebar()
             nicks = self.waitForElements("ul.nav-list>li>a", visible=True)
+            try:
+                for f in nicks:
+                    print "Nick ", f.text
+            except:
+                print "Could not print nick"
             filter(lambda e: e.text == nick, nicks)[0].click()
             return self.switchToChatWindow()
         except:

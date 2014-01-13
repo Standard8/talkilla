@@ -233,11 +233,13 @@
         return;
       var callee = this.callee;
       var session = this.user;
+      dump("initViews user " + (session ? session.get('username') : "n/a") + "\n");
       this.views = [];
       this.collection.chain().reject(function(user) {
         // filter out current signed in user, if any
         if (!session.isLoggedIn())
           return false;
+        dump(user.get('username') + "\n");
         return user.get('username') === session.get('username');
       }).each(function(user) {
         // create a dedicated list entry for each user
@@ -247,9 +249,11 @@
                      callee.get('username') === user.get('username'))
         }));
       }.bind(this));
+      dump("initViews done\n");
     },
 
     render: function() {
+      dump("Sidebar users render\n");
       this.initViews();
       // remove user entries
       this.$('li:not(.nav-header)').remove();

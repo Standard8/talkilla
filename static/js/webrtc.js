@@ -527,7 +527,7 @@
    * @param {RTCPeerConnection} pc
    */
   WebRTC.prototype._setupPeerConnection = function() {
-    this.pc = new mozRTCPeerConnection();
+    this.pc = new mozRTCPeerConnection({iceServers:[]});
     if (this.options.enableDataChannel) {
       this.dc = this.pc.createDataChannel('dc', {
         // We set up a pre-negotiated channel with a specific id, this
