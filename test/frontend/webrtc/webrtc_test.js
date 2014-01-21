@@ -98,6 +98,13 @@ describe("WebRTC", function() {
       expect(webrtc.state).to.be.an('object');
       expect(webrtc.state.current).to.equal('ready');
     });
+
+    it("should emit the `connection-terminated` event", function(done) {
+      var webrtc = new WebRTC();
+      webrtc.once('connection-terminated', function() {
+        done();
+      }).terminate().trigger('ice:closed');
+    });
   });
 
   describe("constraints property", function() {
@@ -614,12 +621,6 @@ describe("WebRTC", function() {
           webrtc.once('remote-stream:terminated', function() {
             done();
           }).terminate();
-        });
-
-        it("should emit the `connection-terminated` event", function(done) {
-          webrtc.once('connection-terminated', function() {
-            done();
-          }).terminate().trigger('ice:closed');
         });
       });
     });

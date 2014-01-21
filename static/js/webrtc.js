@@ -44,6 +44,8 @@
         }.bind(this)
       }
     });
+
+    this.on('ice:closed', this._onIceClosed.bind(this));
   }
   exports.WebRTC = WebRTC;
 
@@ -163,7 +165,7 @@
         this.answer(offer);
       else
         this.initiate(constraints);
-    }).terminate();
+    }.bind(this)).terminate();
 
     return this;
   };
@@ -252,7 +254,6 @@
       stream.stop();
     });
 
-    this.once('ice:closed', this.trigger.bind(this, 'connection-terminated'));
     this.pc.close();
 
     return this;
@@ -420,6 +421,16 @@
   WebRTC.prototype._onIceConnectionStateChange = function() {
     this.trigger('ice:' + this.pc.iceConnectionState);
     this.trigger('ice:change', this.pc.iceConnectionState);
+  };
+
+  /**
+   * Executed when the ICE connection state changes to closed. The
+   * ICE connection has been terminated completely but cleanly.
+   */
+  WebRTC.prototype._onIceClosed = function() {
+    this.state.terminate();
+
+    this.trigger('connection-terminated');
   };
 
   /**
